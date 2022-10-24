@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  
+  <meta name="baidu-site-verification" content="code-J1Qg17G6wT" />
+  <title>高并发解决方案 - 丰子恺撒</title>
+  <meta charset="UTF-8">
+  <meta name="description" content="丰子恺撒">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  
+  
+
+  <link rel="shortcut icon" href="/images/head/head.jpg" type="image/png" />
+  <meta name="description" content="高并发解决方案分享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高并发解决方案">
+<meta property="og:url" content="https://blog.iluwen.com/2022/10/18/%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="丰子恺撒">
+<meta property="og:description" content="高并发解决方案分享">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.iluwen.com/2022/10/18/%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/%E6%89%A9%E5%AE%B9%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%B1%95.png">
+<meta property="og:image" content="https://blog.iluwen.com/2022/10/18/%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95.png">
+<meta property="og:image" content="https://blog.iluwen.com/2022/10/18/%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/%E6%BC%8F%E6%A1%B6%E7%AE%97%E6%B3%95.jpg">
+<meta property="og:image" content="https://blog.iluwen.com/2022/10/18/%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/%E4%BB%A4%E7%89%8C%E6%A1%B6%E7%AE%97%E6%B3%95.jpg">
+<meta property="article:published_time" content="2022-10-18T07:03:18.000Z">
+<meta property="article:modified_time" content="2022-10-21T05:52:27.018Z">
+<meta property="article:author" content="fengzikaisa">
+<meta property="article:tag" content="丰子恺撒">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.iluwen.com/2022/10/18/%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/%E6%89%A9%E5%AE%B9%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%B1%95.png">
+  <link rel="stylesheet" href="https://unpkg.com/highlight.js@9.15.8/styles/atom-one-dark.css" crossorigin>
+  <link rel="stylesheet" href="/lib/mdui_043tiny/css/mdui.css">
+  <link rel="stylesheet" href="/lib/iconfont/iconfont.css">
+  <link rel="stylesheet" href="/lib/fancybox/css/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css">
+  
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2421060_8z08qcz5sq3.css">
+  
+  <link rel="stylesheet" href="/css/style.css?v=1666580351433">
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-drawer-body-left">
+  
+  <div id="nexmoe-background">
+    <div class="nexmoe-bg" style="background-image: url(/images/background/xiaomai.jpg)"></div>
+    <div class="nexmoe-small" style="background-image: url(/images/background/lihui.png)"></div>
+    <div class="mdui-appbar mdui-shadow-0">
+      <div class="mdui-toolbar">
+        <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+        <div class="mdui-toolbar-spacer"></div>
+        <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+        <a href="/" title="fengzikaisa" class="mdui-btn mdui-btn-icon"><img src="/images/head/head.jpg" alt="fengzikaisa"></a>
+       </div>
+    </div>
+  </div>
+  <div id="nexmoe-header">
+      <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="fengzikaisa">
+            <img src="/images/head/head.jpg" alt="fengzikaisa" alt="fengzikaisa">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div class="nexmoe-count-item"><span>Articles</span>16 <div class="item-radius"></div><div class="item-radius item-right"></div> </div>
+        <div class="nexmoe-count-item"><span>Tags</span>8<div class="item-radius"></div><div class="item-radius item-right"></div></div>
+        <div class="nexmoe-count-item"><span>Categories</span>1<div class="item-radius"></div><div class="item-radius item-right"></div></div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-meishi"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-hanbao1"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple" href="/about.html" title="关于">
+            <i class="mdui-list-item-icon nexmoefont icon-jiubei1"></i>
+            <div class="mdui-list-item-content">
+                关于
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+  
+  
+<!-- 站内搜索 -->
+
+<div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search" >
+        <form id="search-form">
+            <label><input type="text" id="local-search-input" name="q" results="0" placeholder="站内搜索" class="input form-control" autocomplete="off" autocorrect="off"/></label>
+            <!-- 清空/重置搜索框 -->
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+        </form>
+    </div>
+    <div id="local-search-result"></div> <!-- 搜索结果区 -->
+    <!-- <p class='no-result'></p> 无匹配时显示，注意在 CSS 中设置默认隐藏 -->
+</div>
+
+
+  
+  <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-social">
+        <a class="mdui-ripple" href="http://wpa.qq.com/msgrd?v=3&uin=769549158&site=qq&menu=yes" target="_blank" mdui-tooltip="{content: 'QQ'}" style="color: rgb(64, 196, 255);background-color: rgba(64, 196, 255, .1);">
+            <i class="nexmoefont icon-QQ"></i>
+        </a><a class="mdui-ripple" href="mailto:likecode@126.com" target="_blank" mdui-tooltip="{content: 'mail'}" style="color: rgb(249,8,8);background-color: rgba(249,8,8,.1);">
+            <i class="nexmoefont icon-mail-fill"></i>
+        </a><a class="mdui-ripple" href="https://blog.csdn.net/wangkailikecode?type=blog" target="_blank" mdui-tooltip="{content: 'CSDN'}" style="color: rgb(199,29,35);background-color: rgba(199,29,35,.1);">
+            <i class="nexmoefont icon-csdn"></i>
+        </a><a class="mdui-ripple" href="https://www.cnblogs.com/iwangkai/" target="_blank" mdui-tooltip="{content: '博客园'}" style="color: rgb(66, 214, 29);background-color: rgba(66, 214, 29, .1);">
+            <i class="nexmoefont icon-bokeyuan"></i>
+        </a><a class="mdui-ripple" href="https://github.com/fengzikaisa/" target="_blank" mdui-tooltip="{content: 'GitHub'}" style="color: rgb(25, 23, 23);background-color: rgba(25, 23, 23, .15);">
+            <i class="nexmoefont icon-github"></i>
+        </a><a class="mdui-ripple" href="https://gitee.com/fengzikaisa" target="_blank" mdui-tooltip="{content: 'gitee'}" style="color: rgb(255, 255, 255);background-color: rgb(199,29,35);">
+            <i class="nexmoefont icon-mayun"></i>
+        </a>
+    </div>
+</div>
+  
+  
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Categories</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/笔记/">笔记</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+  
+  
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/ElasticSearch/" style="font-size: 10px;">ElasticSearch</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" style="font-size: 20px;">分库分表</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 20px;">数据库</a> <a href="/tags/%E9%99%90%E6%B5%81/" style="font-size: 10px;">限流</a>
+    </div>
+    
+  </div>
+
+  
+  
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">Archive</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">16</span></li></ul>
+    </div>
+  </div>
+
+
+<style>
+.nexmoe-widget .archive-list-count{
+	position : absolute;
+	right: 15px;
+	top:9px;
+	color: #DDD;
+}
+</style>
+
+  
+</aside>
+    <div class="nexmoe-copyright">
+        &copy; 2022
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a>fengzikaisa</a><br/>
+        <a href="http://beian.miit.gov.cn" target="_blank">京ICP备17060394号</a><br/>
+        
+        
+    </div>
+
+</div><!-- .nexmoe-drawer -->
+
+  </div>
+  <div id="nexmoe-content">
+    <div class="nexmoe-primary">
+        <div class="nexmoe-post">
+    
+        <div class="nexmoe-post-cover"
+             style="padding-bottom: 24.305555555555554%;">
+            <img data-src="/images/background/xiaomai.jpg" data-sizes="auto" alt="高并发解决方案" class="lazyload">
+            <h1>高并发解决方案</h1>
+        </div>
+    
+
+        <div class="nexmoe-post-meta nexmoe-rainbow" style="margin:10px 0!important;">
+    <a><i class="nexmoefont icon-calendar-fill"></i>2022年10月18日</a>
+    <a><i class="nexmoefont icon-areachart"></i>6.7k 字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>大概 27 分钟</a>
+</div>
+
+        <div class="nexmoe-post-right">
+            
+        </div>
+
+        <article>
+            <p>高并发解决方案分享<span id="more"></span></p>
+<h2 id="什么是高并发"><a href="#什么是高并发" class="headerlink" title="什么是高并发"></a>什么是高并发</h2><p>高并发（High Concurrency）是互联网分布式系统架构设计中必须考虑的因素之一，它通常是指，通过设计保证系统能够同时并行处理很多请求。<br>高并发相关常用的一些指标有响应时间（Response Time），吞吐量（Throughput），每秒查询率QPS（Query Per Second），并发用户数等。</p>
+<ul>
+<li>响应时间：系统对请求做出响应的时间。例如系统处理一个HTTP请求需要200ms，这个200ms就是系统的响应时间。</li>
+<li>吞吐量：单位时间内处理的请求数量。</li>
+<li>QPS：每秒响应请求数。在互联网领域，这个指标和吞吐量区分的没有这么明显。</li>
+<li>并发用户数：同时承载正常使用系统功能的用户数量。例如一个即时通讯系统，同时在线量一定程度上代表了系统的并发用户数。</li>
+</ul>
+<h2 id="高并发解决方案汇总"><a href="#高并发解决方案汇总" class="headerlink" title="高并发解决方案汇总"></a>高并发解决方案汇总</h2><ul>
+<li>扩容<br>水平扩容、垂直扩容</li>
+<li>缓存<br>Redis、CDN等</li>
+<li>队列<br>Kafka、RabitMQ、RocketMQ等</li>
+<li>服务拆分<br>服务化与微服务Spring Cloud、Spring Boot</li>
+<li>限流<br>Guava RateLimiter使用、常用限流算法</li>
+<li>服务降级与服务熔断<br>服务降级的多重选择、Hystrix</li>
+<li>数据库切库，分库分表<br>切库、分表、多数据源</li>
+<li>高可用的一些手段<br>任务调度分布式elastic-job、xxl-job、监控报警机制、负载均衡、图片服务器分离、独立的搜索服务器</li>
+</ul>
+<h3 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h3><p>提高系统并发能力的方式，方法论上主要有两种：垂直扩展（Scale Up）与水平扩展（Scale Out）。<br>前者垂直扩展可以通过提升单机硬件性能，例如：增加CPU核数，升级更好的网卡，升级更好的硬盘，扩充硬盘容量，扩充系统内存；或者提升单机架构性能，例如：使用Cache来减少IO次数，使用异步来增加单服务吞吐量，使用无锁数据结构来减少响应时间。但单机性能总是有极限的，互联网分布式架构设计高并发终极解决方案还是后者：水平扩展</p>
+<p>互联网分层架构中，各层次水平扩展的实践又有所不同：</p>
+<p><img data-fancybox="gallery" data-sizes="auto" data-src="%E6%89%A9%E5%AE%B9%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%B1%95.png" alt="高并发解决方案" class="lazyload"></p>
+<h5 id="用户层可以通过“DNS轮询”的方式来进行水平扩展；"><a href="#用户层可以通过“DNS轮询”的方式来进行水平扩展；" class="headerlink" title="用户层可以通过“DNS轮询”的方式来进行水平扩展；"></a>用户层可以通过“DNS轮询”的方式来进行水平扩展；</h5><p>大多数域名注册商都支持对统一主机添加多条A记录，这就是DNS轮询，DNS服务器将解析请求按照A记录的顺序，随机分配到不同的IP上，这样就完成了简单的负载均衡。</p>
+<p>DNS轮询的优点：</p>
+<ul>
+<li>零成本：只是在DNS服务器上绑定几个A记录，域名注册商一般都免费提供解析服务；</li>
+<li>部署简单：就是在网络拓扑进行设备扩增，然后在DNS服务器上添加记录。</li>
+</ul>
+<p>DNS轮询的缺点：</p>
+<ul>
+<li>可靠性低</li>
+</ul>
+<p>假设一个域名DNS轮询多台服务器，如果其中的一台服务器发生故障，那么所有的访问该服务器的请求将不会有所回应，这是任何人都不愿意看到的。即使从DNS中去掉该服务器的IP，但在Internet上，各地区电信、网通等宽带接入商将众多的DNS存放在缓存中，以节省访问时间，DNS记录全部生效需要几个小时，甚至更久。所以，尽管DNS轮询在一定程度上解决了负载均衡问题，但是却存在可靠性不高的缺点。</p>
+<ul>
+<li>负载分配不均匀（有，但不会有那么大的影响）</li>
+</ul>
+<p>DNS负载均衡采用的是简单的轮询算法，不能区分服务器的差异，不能反映服务器的当前运行状态，不能做到为性能较好的服务器多分配请求，甚至会出现客户请求集中在某一台服务器上的情况。</p>
+<p>DNS服务器是按照一定的层次结构组织的，本地DNS服务器会缓存已解析的域名到IP地址的映射，这会导致使用该DNS服务器的用户在一段时间内访问的是同一台Web服务器，导致Web服务器间的负载不均匀。此外，用户本地计算机也会缓存已解析的域名到IP地址的映射。当多个用户计算机都缓存了某个域名到IP地址的映射时，而这些用户又继续访问该域名下的网页，这时也会导致不同Web服务器间的负载分配不均匀。</p>
+<p>负载不均匀可能导致的后果有：某几台服务器负荷很低，而另几台服务器负载很高、处理缓慢；配置高的服务器分配到的请求少，而配置低的服务器分配到的请求多。</p>
+<p><strong>当nginx成为瓶颈的时候，只要增加服务器数量，新增nginx服务的部署，增加一个外网ip，就能扩展反向代理层的性能，做到理论上的无限高并发。</strong></p>
+<h5 id="反向代理层可以通过nginx来进行水平扩展；"><a href="#反向代理层可以通过nginx来进行水平扩展；" class="headerlink" title="反向代理层可以通过nginx来进行水平扩展；"></a>反向代理层可以通过nginx来进行水平扩展；</h5><p>通过修改nginx.conf，可以设置多个web后端服务器。</p>
+<p><strong>当web后端成为瓶颈的时候，只要增加服务器数量，新增web服务的部署，在nginx配置中配置上新的web后端，就能扩展站点层的性能，做到理论上的无限高并发。</strong></p>
+<h5 id="服务层可以通过服务连接池来进行水平扩展；"><a href="#服务层可以通过服务连接池来进行水平扩展；" class="headerlink" title="服务层可以通过服务连接池来进行水平扩展；"></a>服务层可以通过服务连接池来进行水平扩展；</h5><p>站点层通过RPC-client调用下游的服务层RPC-server时，RPC-client中的连接池会建立与下游服务多个连接，当服务成为瓶颈的时候，只要增加服务器数量，新增服务部署，在RPC-client处建立新的下游服务连接，就能扩展服务层性能，做到理论上的无限高并发。如果需要优雅的进行服务层自动扩容，这里可能需要配置中心里服务自动发现功能的支持。</p>
+<h5 id="数据库可以按照数据范围，或者数据哈希的方式来进行水平扩展；"><a href="#数据库可以按照数据范围，或者数据哈希的方式来进行水平扩展；" class="headerlink" title="数据库可以按照数据范围，或者数据哈希的方式来进行水平扩展；"></a>数据库可以按照数据范围，或者数据哈希的方式来进行水平扩展；</h5><p>在数据量很大的情况下，数据层（缓存，数据库）涉及数据的水平扩展，将原本存储在一台服务器上的数据（缓存，数据库）水平拆分到不同服务器上去，以达到扩充系统性能的目的。</p>
+<blockquote>
+<p>各层实施水平扩展后，能够通过增加服务器数量的方式来提升系统的性能，做到理论上的性能无限。</p>
+</blockquote>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><h5 id="为什么用redis"><a href="#为什么用redis" class="headerlink" title="为什么用redis"></a>为什么用redis</h5><ul>
+<li>因为快</li>
+</ul>
+<h5 id="Redis快的原因"><a href="#Redis快的原因" class="headerlink" title="Redis快的原因"></a>Redis快的原因</h5><ul>
+<li><p>完全基于内存，绝大部分请求是纯粹的内存操作，非常快速。</p>
+</li>
+<li><p>数据结构简单，对数据操作也简单，Redis中的数据结构是专门进行设计的；</p>
+</li>
+<li><p>采用单线程，避免了不必要的上下文切换和竞争条件，也不存在多进程或者多线程导致的切换而消耗 CPU；</p>
+</li>
+<li><p>使用多路I/O复用模型，非阻塞IO；</p>
+</li>
+<li><p>使用底层模型不同，它们之间底层实现方式以及与客户端之间通信的应用协议不一样，Redis直接自己构建了VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求；</p>
+</li>
+</ul>
+<p><strong>关于redis的更多问题可以看下这篇</strong><a href="https://blog.iluwen.com/2022/09/28/redis%E7%9F%A5%E8%AF%86%E7%82%B9%E6%95%B4%E7%90%86/">《redis知识点整理》</a></p>
+<h4 id="什么是CDN"><a href="#什么是CDN" class="headerlink" title="什么是CDN"></a>什么是CDN</h4><p>CDN的全称是Content Delivery Network, 即内容发布网络。简单来说，CDN 就是将静态的资源分发到，位于多个地理位置机房中的服务器上，CDN系统能够实时地根据网络流量和各节点的链接,负载状况以及到用户的距离和响应时间等综合信息将用户的请求重新导向离用户最近的服务节点上</p>
+<h4 id="为什么用CDN，而不是分布式缓存。"><a href="#为什么用CDN，而不是分布式缓存。" class="headerlink" title="为什么用CDN，而不是分布式缓存。"></a>为什么用CDN，而不是分布式缓存。</h4><p>一般来说，图片和视频的大小会在几兆到几百兆之间不等，如果我们的应用服务器和分布式缓存都部署在北京的机房里，这时一个杭州的用户要访问缓存中的一个视频，那这个视频文件就需要从北京传输到杭州，期间会经过多个公网骨干网络，延迟很高，会让用户感觉视频打开很慢，严重影响到用户的使用体验。</p>
+<p>所以，静态资源访问的关键点是就近访问，即北京用户访问北京的数据，杭州用户访问杭州的数据，这样才可以达到性能的最优。</p>
+<p>你可能会说：“那我们在杭州也自建一个机房，让用户访问杭州机房的数据就好了呀。”可用户遍布在全国各地，有些应用可能还有国外的用户，我们不可能在每个地域都自建机房，这样成本太高了。<br>另外，单个视频和图片等静态资源很大，并且访问量又极高，如果使用业务服务器和分布式缓存来承担这些流量，无论是对于内网还是外网的带宽都会是很大的考验。</p>
+<h3 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h3><h4 id="什么是消息队列"><a href="#什么是消息队列" class="headerlink" title="什么是消息队列"></a>什么是消息队列</h4><p>消息队列（Message Queue）可以看成是存储数据的一个容器，可以用来平衡低速系统和高速系统处理任务时间差的工具。</p>
+<h5 id="为什么用消息队列"><a href="#为什么用消息队列" class="headerlink" title="为什么用消息队列"></a>为什么用消息队列</h5><ul>
+<li>流量削峰填谷（最主要的作用）</li>
+<li>解耦</li>
+<li>异步</li>
+<li>最终一致性</li>
+</ul>
+<p><strong>削峰</strong></p>
+<ul>
+<li>传统模式：并发量大的时候，所有的请求直接怼到数据库，造成数据库连接异常</li>
+<li>中间件模式：系统A慢慢的按照数据库能处理的并发量，从消息队列中慢慢拉取消息。在生产中，这个短暂的高峰期积压是允许的。</li>
+</ul>
+<p><strong>解耦</strong></p>
+<ul>
+<li>传统模式:系统间耦合性太强，系统A在代码中直接调用系统B和系统C的代码，如果将来D系统接入，系统A还需要修改代码，过于麻烦！</li>
+<li>中间件模式：将消息写入消息队列，需要消息的系统自己从消息队列中订阅，从而系统A不需要做任何修改</li>
+</ul>
+<p><strong>异步</strong></p>
+<ul>
+<li>传统模式：一些非必要的业务逻辑以同步的方式运行，太耗费时间。</li>
+<li>中间件模式： 将消息写入消息队列，非必要的业务逻辑以异步的方式运行，加快响应速度。</li>
+</ul>
+<h5 id="消息队列缺点"><a href="#消息队列缺点" class="headerlink" title="消息队列缺点"></a>消息队列缺点</h5><ul>
+<li>系统可用性降低</li>
+<li>系统复杂性增加</li>
+</ul>
+<h3 id="服务拆分"><a href="#服务拆分" class="headerlink" title="服务拆分"></a>服务拆分</h3><h4 id="一体化架构的优缺点"><a href="#一体化架构的优缺点" class="headerlink" title="一体化架构的优缺点"></a>一体化架构的优缺点</h4><p>所谓“一体化架构”就是说所有的功能模块，都被打包到一个web工程中，然后部署到应用服务器上。</p>
+<p><strong>优点</strong><br>只针对开发前期</p>
+<ul>
+<li><p>开发简单直接，代码和项目集中式管理</p>
+</li>
+<li><p>只需要维护一个工程，节省维护系统运行的人力成本</p>
+</li>
+<li><p>排查问题方便，只需要排查这个应用进程就可以了，目标性强</p>
+</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li><p>数据库连接的扩容问题</p>
+</li>
+<li><p>代码冲突耦合，模块相互依赖（git版本控制管理员）</p>
+</li>
+<li><p>运维困难，构建编译部署缓慢<br>在项目初期，你的代码可能只有几千行，构建一次只需要一分钟，那么你可以很敏捷灵活地频繁上线变更修复问题。但是当你的系统扩充到几十万行，甚至上百万行代码的时候，一次构建的过程，包括编译、单元测试、打包和上传到正式环境，花费的时间可能达到十几分钟，并且，任何小的修改，都需要构建整个项目，上线变更的过程非常不灵活。</p>
+</li>
+<li><p>出现问题导致应用整体不可用</p>
+</li>
+</ul>
+<h4 id="微服务拆分的意义"><a href="#微服务拆分的意义" class="headerlink" title="微服务拆分的意义"></a>微服务拆分的意义</h4><ul>
+<li>将与业务无关的公用服务抽取出来，下沉成单独的服务。每一个服务的功能内聚，维护人员职责明确，增加了新的功能只需要测试自己的服务就可以了，而一旦服务出了问题，也可以通过服务熔断、降级的方式减少对于其他服务的影响</li>
+</ul>
+<h4 id="微服务拆分原则"><a href="#微服务拆分原则" class="headerlink" title="微服务拆分原则"></a>微服务拆分原则</h4><ul>
+<li>做到单一服务内部功能的高内聚，和低耦合：也就是说，每个服务只完成自己职责之内的任务，对于不是自己职责的功能，交给其它服务来完成<br>有用户服务和内容服务，用户信息中有“是否为认证用户”字段。<br>但是内容服务里有这么一段逻辑：如果用户认证字段等于 1，代表是认证用户，那么就把内容权重提升。<br>问题是，判断用户是否为认证用户的逻辑，应该内聚在用户服务内部，而不应该由内容服务判断，否则认证的逻辑一旦变更，内容服务也需要一同跟着变更，这就不满足高内聚、低耦合的要求了。</li>
+<li>关注服务拆分的粒度，先粗略拆分，然后逐渐细化。<br>比如说，对于一个社区系统来说，你可以先把和用户关系相关的业务逻辑，都拆分到用户关系服务中，之后，再把比如黑名单的逻辑独立成黑名单服务。</li>
+<li>拆分的过程，要尽量避免影响产品的日常功能迭代。也就是说，要一边做产品功能迭代，一边完成服务器拆分。即，我们的拆分只能在现有一体化系统的基础上，不断剥离业务独立部署。剥离的顺序，可以如下：<br>优先剥离比较独立的边界服务（比如短信服务、地理位置服务），从非核心的服务出发，减少拆分对现有业务的影响<br>当两个服务存在依赖关系时，优先拆分被依赖的服务<br>比方说，内容服务依赖于用户服务获取用户的基本信息，那么如果先把内容服务拆分出来，内容服务就会依赖于一体化架构中的用户模块，这样还是无法保证内容服务的快速部署能力<br>所以正确的做法是，你要理清服务之间的调用关系，比如说，内容服务会依赖用户服务获取用户信息，互动服务会依赖内容服务，所以要按照先用户服务，再内容服务，最后互动服务的顺序来进行拆分。</li>
+<li>服务接口的定义要具备可扩展性<br>服务拆分之后，由于服务是以独立进程的方式部署，所以服务之间的通信，就不再是进程内部的方法调用，而是跨进程的网络通信了。在这种通信模式下需要注意，服务接口的定义要具备可扩展性，否则在服务变更时，会造成意想不到的错误。<br>比如，服务接口的参数类型最好是封装类，这样如果增加参数，就不必变更参数的签名，只需要在类中添加字段就可以了</li>
+</ul>
+<h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><h4 id="什么是限流"><a href="#什么是限流" class="headerlink" title="什么是限流"></a>什么是限流</h4><p>在高并发系统中，限流通常指的是：对高并发访问或者请求进行限速或者对一个时间内的请求进行限速来保护我们的系统，一旦达到系统的限速规则（比如系统限制的请求速度），则可以采用下面的方式来处理这些请求。</p>
+<ul>
+<li>拒绝服务（友好提示或者跳转到错误页面）</li>
+<li>排队或等待（比如秒杀系统）</li>
+<li>服务降级（返回默认的兜底数据）</li>
+</ul>
+<h4 id="限流常用算法"><a href="#限流常用算法" class="headerlink" title="限流常用算法"></a>限流常用算法</h4><ul>
+<li><p>计数器（固定窗口算法）<br>假设1min内服务器的负载能力为100，因此一个周期的访问量限制在100，然而在第一个周期的最后5秒和下一个周期的开始5秒时间段内，分别涌入100的访问量，虽然没有超过每个周期的限制量，但是整体上10秒内已达到200的访问量，已远远超过服务器的负载能力，由此可见，计数器算法方式限流对于周期比较长的限流，存在很大的弊端。</p>
+</li>
+<li><p>滑动窗口算法<br>滑动窗口算法是将时间周期分为n个小周期，分别记录每个小周期内的访问次数 ，并且根据时间滑动删除过期的小周期。<br>如下图，假设时间周期为1min，将1min再分割成2个小周期，统计每个小周期的访问数量，则可以看到，第一个时间周期内访问数量为75，第二个时间周期内访问数量为100，超过100的数量被限流掉了。<br><img data-fancybox="gallery" data-sizes="auto" data-src="%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95.png" alt="高并发解决方案" class="lazyload"><br>由此可见，当滑动窗口格子划分得越多，那么滑动窗口的滚动就越平滑，限流的统计就越精确。可以很好的解决固定窗口的流动问题。</p>
+</li>
+<li><p>漏桶算法<br>漏桶算法是将访问请求放入漏桶中，当请求达到限流值，则进行丢弃（触发限流策略）。无论有多少请求，请求的速率有多大，都按照固定的速率流出，对应到系统中就是按照固定的速率处理请求。超过漏桶容量的直接抛弃。<br><img data-fancybox="gallery" data-sizes="auto" data-src="%E6%BC%8F%E6%A1%B6%E7%AE%97%E6%B3%95.jpg" alt="高并发解决方案" class="lazyload"></p>
+</li>
+<li><p>令牌桶算法<br>令牌桶其实和漏桶的原理类似，令牌桶按固定的速率往桶里放入令牌，并且只要能从桶里取出令牌就能通过，令牌桶支持突发流量的快速处理。<br><img data-fancybox="gallery" data-sizes="auto" data-src="%E4%BB%A4%E7%89%8C%E6%A1%B6%E7%AE%97%E6%B3%95.jpg" alt="高并发解决方案" class="lazyload"></p>
+</li>
+</ul>
+<blockquote>
+<p>令牌桶和漏桶区别<br>主要区别在于“漏桶算法”能够强行限制数据的传输速率，而“令牌桶算法”在能够限制数据的平均传输速率外，还允许某种程度的突发传输。在“令牌桶算法”中，只要令牌桶中存在令牌，那么就允许突发地传输数据直到达到用户配置的门限，因此它适合于具有突发特性的流量。</p>
+</blockquote>
+<h3 id="服务降级与服务熔断"><a href="#服务降级与服务熔断" class="headerlink" title="服务降级与服务熔断"></a>服务降级与服务熔断</h3><h4 id="什么是熔断"><a href="#什么是熔断" class="headerlink" title="什么是熔断"></a>什么是熔断</h4><p>当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，<strong>进而熔断该节点微服务的调用，快速返回错误的响应信息。</strong>检测到该节点微服务调用响应正常后恢复调用链路。<br>例如：A服务调用 B服务的某个功能，由于网络不稳定问题，或者 B服务卡机，导致功能时间超长。如果这样的次数很多。我们就可以直接将 B服务段路了（A不再请求 B接口），凡是调用 B得直接返回降级数据，不必等待 B的超长执行。这样 B的故障问题，就不会级联影响到 A服务。</p>
+<h4 id="什么是降级"><a href="#什么是降级" class="headerlink" title="什么是降级"></a>什么是降级</h4><p>服务降级是指 当服务器压力剧增的情况下，根据实际业务情况及流量，对一些服务和页面有策略的不处理，或换种简单的方式处理，从而释放服务器资源以保证核心业务正常运作或高效运作。<strong>说白了，就是尽可能的把系统资源让给优先级高的服务。</strong><br>例如：整个网站处于流量高峰期，服务器压力剧增，根据当前业务情况及流量，对一些服务和页面进行由策略的降级[停止服务，所有的调用直接返回降级数据]。以此缓解服务器资源的压力，以保证核心业务的正常运行，同时也保持了客户和大部分客户得到正确的对应。</p>
+<h4 id="熔断和降级的区别"><a href="#熔断和降级的区别" class="headerlink" title="熔断和降级的区别"></a>熔断和降级的区别</h4><p><strong>相同点：</strong></p>
+<ul>
+<li>为了保证集群大部分服务的可用性和可靠性，防止崩溃，牺牲小我</li>
+<li>用户最终都是体验到某个功能不可用</li>
+</ul>
+<p><strong>不同点：</strong></p>
+<ul>
+<li>熔断是被调用方故障，触发的系统主动规则</li>
+<li>降级是基于全局的考虑，通知一些正常服务，释放资源</li>
+</ul>
+<p><strong>推荐使用阿里的Sentinel，关于sentinel的介绍可以看这篇文章</strong><a href="https://blog.iluwen.com/2022/09/29/sentinel%E8%BF%98%E6%98%AFhystrix/">《Sentinel还是Hystrix》</a></p>
+<h3 id="数据库切库，分库分表"><a href="#数据库切库，分库分表" class="headerlink" title="数据库切库，分库分表"></a>数据库切库，分库分表</h3><p><strong>关于分库分表的更多信息可以看以下几篇文章</strong><br><a href="https://blog.iluwen.com/2022/09/28/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">《分库分表》</a><br><a href="https://blog.iluwen.com/2022/09/28/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E4%B9%8B%E5%90%8E%E7%9A%84id%E4%B8%BB%E9%94%AE%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86/">《分库分表之后的id主键如何处理》</a><br><a href="https://blog.iluwen.com/2022/09/28/%E7%8E%B0%E5%9C%A8%E6%9C%89%E4%B8%80%E4%B8%AA%E6%9C%AA%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E7%B3%BB%E7%BB%9F%EF%BC%8C%E6%9C%AA%E6%9D%A5%E8%A6%81%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%EF%BC%8C%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E6%89%8D%E5%8F%AF%E4%BB%A5%E8%AE%A9%E7%B3%BB%E7%BB%9F%E4%BB%8E%E6%9C%AA%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2%E5%88%B0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E4%B8%8A%EF%BC%9F/">《现在有一个未分库分表的系统，未来要分库分表，如何设计才可以让系统从未分库分表动态切换到分库分表上》</a><br><a href="https://blog.iluwen.com/2022/09/28/%E5%8F%AF%E4%BB%A5%E5%8A%A8%E6%80%81%E6%89%A9%E5%AE%B9%E7%BC%A9%E5%AE%B9%E7%9A%84%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E6%96%B9%E6%A1%88/">《可以动态扩容缩容的分库分表方案》</a></p>
+<h2 id="如何设计一个秒杀系统"><a href="#如何设计一个秒杀系统" class="headerlink" title="如何设计一个秒杀系统"></a>如何设计一个秒杀系统</h2><p><strong>秒杀系统场景特点</strong></p>
+<ul>
+<li>秒杀时大量用户会在同一时间同时进行抢购，网站瞬时访问流量激增。</li>
+<li>秒杀一般是访问请求数量远远大于库存数量，只有少部分用户能够秒杀成功。</li>
+<li>秒杀业务流程比较简单，一般就是下订单减库存。</li>
+</ul>
+<p><strong>秒杀架构设计理念</strong></p>
+<ul>
+<li><p>限流： 鉴于只有少部分用户能够秒杀成功，所以要限制大部分流量，只允许少部分流量进入服务后端。</p>
+</li>
+<li><p>削峰：对于秒杀系统瞬时会有大量用户涌入，所以在抢购一开始会有很高的瞬间峰值。高峰值流量是压垮系统很重要的原因，所以如何把瞬间的高流量变成一段时间平稳的流量也是设计秒杀系统很重要的思路。实现削峰的常用的方法有利用缓存和消息中间件等技术。</p>
+</li>
+<li><p>异步处理：秒杀系统是一个高并发系统，采用异步处理模式可以极大地提高系统并发量，其实异步处理就是削峰的一种实现方式。</p>
+</li>
+<li><p>内存缓存：秒杀系统最大的瓶颈一般都是数据库读写，由于数据库读写属于磁盘IO，性能很低，如果能够把部分数据或业务逻辑转移到内存缓存，效率会有极大地提升。</p>
+</li>
+<li><p>可拓展：当然如果我们想支持更多用户，更大的并发，最好就将系统设计成弹性可拓展的，如果流量来了，拓展机器就好了。像淘宝、京东等双十一活动时会增加大量机器应对交易高峰。</p>
+</li>
+</ul>
+<p><strong>设计思路</strong></p>
+<p>将请求拦截在系统上游，降低下游压力：秒杀系统特点是并发量极大，但实际秒杀成功的请求数量却很少，所以如果不在前端拦截很可能造成数据库读写锁冲突，甚至导致死锁，最终请求超时。<br>充分利用缓存：利用缓存可极大提高系统读写速度。<br>充分消息队列：消息队列可以削峰，将拦截大量并发请求，这也是一个异步处理过程，后台业务根据自己的处理能力，从消息队列中主动的拉取请求消息进行业务处理。</p>
+<p><strong>前端方案</strong></p>
+<ul>
+<li>页面静态化：将活动页面上的所有可以静态的元素全部静态化，并尽量减少动态元素。通过CDN来抗峰值。 </li>
+<li>秒杀链接加盐</li>
+<li>禁止重复提交：用户提交之后按钮置灰，禁止重复提交 </li>
+<li>用户限流：在某一时间段内只允许用户提交一次请求，比如可以采取IP限流</li>
+</ul>
+<p><strong>后端方案</strong></p>
+<ul>
+<li><p>服务端控制器层(网关层)<br>对于我们的秒杀链接的非法攻击请求，比如：每秒进行1000次刷新请求，肯定不是人为的，或者需要携带令牌的请求并未携带令牌，伪造请求过来，就需要识别这种非法攻击请求进行拦截，拦截的地方一般设置在网关层，使得我们进入网关以后的请求都是正常的动态请求</p>
+</li>
+<li><p>限制uid（UserID）访问频率：<br>我们上面拦截了浏览器访问的请求，但针对某些恶意攻击或其它插件，在服务端控制层需要针对同一个访问uid，限制访问频率。</p>
+</li>
+<li><p>服务层<br>上面只拦截了一部分访问请求，当秒杀的用户量很大时，即使每个用户只有一个请求，到服务层的请求数量还是很大。比如我们有100W用户同时抢100台手机，服务层并发请求压力至少为100W。<br>（1）采用消息队列缓存请求：既然服务层知道库存只有100台手机，那完全没有必要把100W个请求都传递到数据库啊，那么可以先把这些请求都写到消息队列缓存一下，数据库层订阅消息减库存，减库存成功的请求返回秒杀成功，失败的返回秒杀结束。<br>（2）利用缓存应对读请求：对类似于12306等购票业务，是典型的读多写少业务，大部分请求是查询请求，所以可以利用缓存分担数据库压力。<br>（3）利用缓存应对写请求：缓存也是可以应对写请求的，比如我们就可以把数据库中的库存数据转移到Redis缓存中，所有减库存操作都在Redis中进行，然后再通过后台进程把Redis中的用户秒杀请求同步到数据库中。</p>
+</li>
+<li><p>数据库层<br>数据库层是最脆弱的一层，一般在应用设计时在上游就需要把请求拦截掉，数据库层只承担“能力范围内”的访问请求。<br>经过上边的拦截，真正到达后台的请求已经不多了，一般情况下mysql完全可以搞定了，当然我们也可以在数据库层面有一些措施<br>（1）增加数据库连接池连接数<br>（2）调大数据库缓存<br>（3）尽量使用细粒度的锁，如使用mysql自带的乐观锁机制<br>（4）数据库可以进行拆分，分库分表<br>（5）业务方的数据批量定时同步到数据库</p>
+</li>
+</ul>
+
+        </article>
+
+        
+            
+  <div class="nexmoe-post-copyright">
+    <strong>Author：</strong>fengzikaisa<br>
+    
+    <strong>Link：</strong><a href="https://blog.iluwen.com/2022/10/18/%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" title="https:&#x2F;&#x2F;blog.iluwen.com&#x2F;2022&#x2F;10&#x2F;18&#x2F;%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88&#x2F;" target="_blank" rel="noopener">https:&#x2F;&#x2F;blog.iluwen.com&#x2F;2022&#x2F;10&#x2F;18&#x2F;%E9%AB%98%E5%B9%B6%E5%8F%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88&#x2F;</a><br>
+
+    
+      <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+    
+  </div>
+
+
+        
+
+        <div class="nexmoe-post-meta nexmoe-rainbow">
+    
+    
+</div>
+
+    <div class="nexmoe-post-footer">
+        <section class="nexmoe-comment">
+    <div class="valine"></div>
+<script src="https://unpkg.com/leancloud-storage/dist/av-min.js"></script>
+<script src='https://unpkg.com/valine@1.3.9/dist/Valine.min.js'></script>
+<script>
+    // 使用方法 https://valine.js.org/quickstart.html
+    new Valine({
+        el: '.valine',
+        appId: 'ekqvfhd5WtQzBE3Fbdnjf0gN-gzGzoHsz',
+        appKey: '5xNg4bBQmVpahCt7SK4gXarU'
+    })
+</script>
+</section>
+    </div>
+</div>
+
+
+        <div class="nexmoe-post-right">
+          
+            <div class="nexmoe-fixed">
+              <div class="nexmoe-tool">
+                <a href="#" aria-label="回到顶部" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+              </div>
+            </div>
+          
+        </div>
+    </div>
+  </div>
+  <div id="nexmoe-pendant">
+    <div class="nexmoe-drawer mdui-drawer nexmoe-pd" id="drawer">
+        
+            <div class="nexmoe-pd-item">
+                <div class="clock">
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="memory"></div>
+        <div class="needle" id="hours"></div>
+        <div class="needle" id="minutes"></div>
+        <div class="needle" id="seconds"></div>
+        <div class="clock_logo">
+
+        </div>
+
+    </div>
+<style>
+    .clock {
+        background-color: #ffffff;
+        width: 70vw;
+        height: 70vw;
+        max-width: 70vh;
+        max-height: 70vh;
+        border: solid 2.8vw #242424;
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+        box-sizing: border-box;
+        box-shadow: 0 1.4vw 2.8vw rgba(0, 0, 0, 0.8);
+        zoom:0.2
+    }
+
+    .memory {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: center;
+    }
+
+    .memory:nth-child(1) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(0deg) translateY(-520%);
+    }
+
+    .memory:nth-child(2) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(6deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(3) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(12deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(4) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(18deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(5) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(24deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(6) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(30deg) translateY(-520%);
+    }
+
+    .memory:nth-child(7) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(36deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(8) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(42deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(9) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(48deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(10) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(54deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(11) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(60deg) translateY(-520%);
+    }
+
+    .memory:nth-child(12) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(66deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(13) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(72deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(14) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(78deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(15) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(84deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(16) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(90deg) translateY(-520%);
+    }
+
+    .memory:nth-child(17) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(96deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(18) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(102deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(19) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(108deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(20) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(114deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(21) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(120deg) translateY(-520%);
+    }
+
+    .memory:nth-child(22) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(126deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(23) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(132deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(24) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(138deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(25) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(144deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(26) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(150deg) translateY(-520%);
+    }
+
+    .memory:nth-child(27) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(156deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(28) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(162deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(29) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(168deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(30) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(174deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(31) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(180deg) translateY(-520%);
+    }
+
+    .memory:nth-child(32) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(186deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(33) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(192deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(34) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(198deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(35) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(204deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(36) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(210deg) translateY(-520%);
+    }
+
+    .memory:nth-child(37) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(216deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(38) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(222deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(39) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(228deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(40) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(234deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(41) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(240deg) translateY(-520%);
+    }
+
+    .memory:nth-child(42) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(246deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(43) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(252deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(44) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(258deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(45) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(264deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(46) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(270deg) translateY(-520%);
+    }
+
+    .memory:nth-child(47) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(276deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(48) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(282deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(49) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(288deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(50) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(294deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(51) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(300deg) translateY(-520%);
+    }
+
+    .memory:nth-child(52) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(306deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(53) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(312deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(54) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(318deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(55) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(324deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(56) {
+        background-color: #424242;
+        width: 2%;
+        height: 8%;
+        transform: translate(-50%, -50%) rotate(330deg) translateY(-520%);
+    }
+
+    .memory:nth-child(57) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(336deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(58) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(342deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(59) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(348deg) translateY(-1461%);
+    }
+
+    .memory:nth-child(60) {
+        background-color: #949494;
+        width: 1%;
+        height: 3%;
+        transform: translate(-50%, -50%) rotate(354deg) translateY(-1461%);
+    }
+
+    .needle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: center;
+    }
+
+    .needle#hours {
+        background-color: #1f1f1f;
+        width: 4%;
+        height: 30%;
+        transform-origin: center 75%;
+        transform: translate(-50%, -75%);
+    }
+
+    .needle#hours.moving {
+        transition: transform 150ms ease-out;
+    }
+
+    .needle#hours:after {
+        content: '';
+        background-color: #1f1f1f;
+        width: 4vw;
+        height: 4vw;
+        max-width: 4vh;
+        max-height: 4vh;
+        display: block;
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        box-sizing: border-box;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .needle#minutes {
+        background-color: #1f1f1f;
+        width: 2%;
+        height: 45%;
+        transform-origin: center 75%;
+        transform: translate(-50%, -75%);
+    }
+
+    .needle#minutes.moving {
+        transition: transform 150ms ease-out;
+    }
+
+    .needle#minutes:after {
+        content: '';
+        background-color: #1f1f1f;
+        width: 4vw;
+        height: 4vw;
+        max-width: 4vh;
+        max-height: 4vh;
+        display: block;
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        box-sizing: border-box;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .needle#seconds {
+        background-color: #cb2f2f;
+        width: 1%;
+        height: 50%;
+        transform-origin: center 75%;
+        transform: translate(-50%, -75%);
+    }
+
+    .needle#seconds.moving {
+        transition: transform 150ms ease-out;
+    }
+
+    .needle#seconds:after {
+        content: '';
+        background-color: #cb2f2f;
+        width: 2.5vw;
+        height: 2.5vw;
+        max-width: 2.5vh;
+        max-height: 2.5vh;
+        display: block;
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        box-sizing: border-box;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .clock_logo{
+        width: 10vw;
+        height: 10vw;
+        max-width: 10vh;
+        max-height: 10vh;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        box-sizing: border-box;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+    @media (min-width: 100vh) {
+        .clock {
+            border: solid 2.8vh #242424;
+            box-shadow: 0 1.4vh 2.8vh rgba(0, 0, 0, 0.8);
+        }
+    }
+
+</style>
+
+
+
+
+
+            </div>
+        
+            <div class="nexmoe-pd-item">
+                <div class="qweather" >
+    <div id="he-plugin-standard"></div>
+    <div class="qweather-logo">
+
+    </div>
+
+</div>
+<style>
+    .qweather{
+        position: relative;
+    }
+    .qweather-logo{
+        position: absolute;
+        right: 0;
+        top: -15px;
+        width: 40px;
+        height: 40px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+</style>
+<script>
+  WIDGET = {
+    "CONFIG": {
+      "layout": "2",
+      "width": "260",
+      "height": "220",
+      "background": "5",
+      "dataColor": "e67249",
+      "borderRadius": "15",
+      "key": "f74d1e1690e6432d801e97fa2f05a162"
+    }
+  }
+</script>
+<script src="https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0"></script>
+
+            </div>
+        
+</div>
+<style>
+    .nexmoe-pd {
+        left: auto;
+        top: 40px;
+        right: 0;
+    }
+    .nexmoe-pd-item{
+       display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+</style>
+
+  </div>
+  <script src="https://unpkg.com/lazysizes@5.1.0/lazysizes.min.js"></script>
+<script src="https://cdn.staticfile.org/highlight.js/10.0.0/highlight.min.js"></script>
+<script src="https://unpkg.com/mdui@0.4.3/dist/js/mdui.min.js?v=1"></script>
+
+<script>
+	hljs.initHighlightingOnLoad();
+</script>
+
+<script src="https://unpkg.com/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="/lib/fancybox/js/jquery.fancybox.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/gh/xtaodada/xtaodada.github.io@0.0.2/copy.js"></script>
+
+<script src="/js/app.js?v=1666580351435"></script>
+
+<script src="https://unpkg.com/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js"></script>
+<script>
+	$(".justified-gallery").justifiedGallery({
+		rowHeight: 160,
+		margins: 10,
+	});
+</script>
+
+  
+
+
+
+
+
+    <!-- baidu Analytics -->
+<script>
+    var _hmt = _hmt || [];
+    (function() {var hm = document.createElement('script');
+    hm.src = 'https://hm.baidu.com/hm.js?383c5c5ae509b84a83f7cde89f35ae03';
+    var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<!-- hexo injector body_end start -->
+<script src="https://unpkg.com/clipboard@2.0.8/dist/clipboard.min.js"></script>
+
+<script src="/lib/codeBlock/codeBlockFuction.js"></script>
+
+<script src="/lib/codeBlock/codeLang.js"></script>
+
+<script src="/lib/codeBlock/codeCopy.js"></script>
+
+<script src="/lib/codeBlock/codeShrink.js"></script>
+
+<link rel="stylesheet" href="/lib/codeBlock/matery.css">
+
+<script src="/js/clock.js"></script>
+
+<script src="/js/webapp.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+<script src="/js/search.js"></script>
+<!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/3d817d1d.js","daovoice")</script>
+<script>
+  daovoice('init', {
+    app_id: "3d817d1d"
+  });
+  daovoice('update');
+</script>
+
